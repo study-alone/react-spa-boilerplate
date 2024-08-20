@@ -2,9 +2,15 @@ import { useState } from 'react'
 import ReactLogo from '@/assets/react.svg?react'
 import ViteLogo from '@/assets/vite.svg?react'
 import '@/App.css'
+import { useModal } from '@/shared/lib/modal/useModal'
 
 function App() {
 	const [count, setCount] = useState(0)
+	const modal = useModal()
+
+    const openModal = () => {
+        const res = await modal.push({ 'modal1',  })
+    }
 
 	return (
 		<>
