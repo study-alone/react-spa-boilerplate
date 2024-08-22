@@ -3,14 +3,22 @@ import ReactLogo from '@/assets/react.svg?react'
 import ViteLogo from '@/assets/vite.svg?react'
 import '@/App.css'
 import { useModal } from '@/shared/lib/modal/useModal'
+import { TestDialog } from '@/component/modal/TestDialog'
+import { Button } from '@mui/material'
 
 function App() {
 	const [count, setCount] = useState(0)
 	const modal = useModal()
 
-    const openModal = () => {
-        const res = await modal.push({ 'modal1',  })
-    }
+	const openModal = async () => {
+		const res = await modal.push('modal1', TestDialog, {
+			selectedValue: 'username@gmail.com',
+			onClose(value: string) {
+				console.log(value)
+			},
+		})
+		window.alert(res)
+	}
 
 	return (
 		<>
@@ -32,6 +40,7 @@ function App() {
 				</p>
 			</div>
 			<p className="read-the-docs">Click on the Vite and React logos to learn more</p>
+			<Button onClick={openModal}>open modal</Button>
 		</>
 	)
 }

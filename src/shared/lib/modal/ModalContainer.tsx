@@ -7,23 +7,29 @@ type ModalContainerProps = {
 }
 
 export const ModalContainer: React.FC<ModalContainerProps> = ({ containerId }) => {
-	const tempId = useId()
 	const modal = useModal()
-	const { Component, reject, resolve, ...restProps } = modal.top
-
-	if (!Component) return <></>
+	const topComponentInfo = modal.top
 
 	useEffect(() => {
-		if (window.document.getElementById(containerId)) return
+		if (document.getElementById(containerId)) return
 		const modalDOM = document.createElement('div')
-		modalDOM.id = containerId || tempId
+		modalDOM.id = containerId
 		document.body.append(modalDOM)
 	}, [])
 
+	if (!topComponentInfo && !document.getElementById(containerId)) return <></>
+
+	console.log('ModalContainer', topComponentInfo)
+
 	return ReactDOM.createPortal(
 		<div>
-			<Component resolve={resolve} reject={reject} {...restProps} />
+			<topComponentInfo.Component
+				{...(topComponentInfo.props as object)}
+				key={topComponentInfo.key}
+				resolve={topComponentInfo.resolve}
+				reject={topComponentInfo.reject}
+			/>
 		</div>,
-		window.document.getElementById('containerId') as HTMLElement,
+		document.getElementById(containerId) as HTMLElement,
 	)
 }

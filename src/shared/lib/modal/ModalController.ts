@@ -1,6 +1,6 @@
 interface ModalInfo {
 	key: string
-	Component: React.FC<any>
+	Component: React.ElementType
 	props: unknown
 	resolve: (value: string) => void
 	reject: (reason?: string) => void
@@ -44,7 +44,11 @@ export class ModalController {
 		this.flush()
 	}
 
-	async push(key: string, Component: React.FC<any>, props: unknown) {
+	async push<C extends React.ElementType>(
+		key: string,
+		Component: C,
+		props: React.ComponentProps<C>,
+	) {
 		return new Promise((resolve, reject) => {
 			this.modalInfos.push({
 				key,
@@ -53,7 +57,7 @@ export class ModalController {
 				resolve: (value) => this.handlePromise(key, resolve, value),
 				reject: (reason) => this.handlePromise(key, reject, reason),
 			})
+			this.flush()
 		})
-		this.flush()
 	}
 }
